@@ -304,17 +304,11 @@ export default function RoulettePage() {
             <div className="lg:col-span-2">
               <Card className="casino-card border-4 border-yellow-400 text-white">
                 <CardContent className="p-8">
-                  <div className="relative w-96 h-96 mx-auto mb-8">
+                  <div className="relative w-96 h-96 mx-auto mb-8 overflow-hidden">
                     {/* Wheel */}
                     <div
                       ref={wheelRef}
-                      className="absolute inset-0 rounded-full border-8 border-yellow-400 bg-gradient-to-br from-green-700 to-green-900"
-                      style={{
-                        background: `conic-gradient(${ROULETTE_NUMBERS.map(
-                          (num, idx) =>
-                            `${num.color === "red" ? "#dc2626" : num.color === "black" ? "#000000" : "#16a34a"} ${idx * (360 / 37)}deg ${(idx + 1) * (360 / 37)}deg`,
-                        ).join(", ")})`,
-                      }}
+                      className="absolute inset-0 rounded-full roulette-wheel"
                     >
                       {/* Numbers on wheel */}
                       {ROULETTE_NUMBERS.map((num, idx) => (
