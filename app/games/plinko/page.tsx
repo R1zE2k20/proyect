@@ -1,4 +1,12 @@
-import React, { useRef, useState, useEffect } from "react"
+"use client"
+
+import React, { useRef, useState, useEffect, useMemo } from "react"
+import Link from "next/link"
+import Navigation from "@/components/navigation"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ArrowLeft } from "lucide-react"
+import { useAuth } from "@/hooks/use-auth"
 
 interface Ball {
   x: number
@@ -36,7 +44,8 @@ const PlinkoGame: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [ball, setBall] = useState<Ball | null>(null)
   const [lastResult, setLastResult] = useState<number | null>(null)
-  const pegs = getPegs()
+  const pegs = useMemo(() => getPegs(), [])
+  const { user } = useAuth()
 
   const dropBall = () => {
     if (ball) return // Evita múltiples bolas activas
@@ -56,11 +65,11 @@ const PlinkoGame: React.FC = () => {
     if (!canvas || !ctx) return
 
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
-    ctx.fillStyle = "#000"
+    ctx.fillStyle = "#111827"
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
 
     // Dibujar pines
-    ctx.fillStyle = "#aaa"
+    ctx.fillStyle = "#e5e7eb"
     pegs.forEach((peg) => {
       ctx.beginPath()
       ctx.arc(peg.x, peg.y, PEG_RADIUS, 0, Math.PI * 2)
@@ -74,7 +83,7 @@ const PlinkoGame: React.FC = () => {
         multi >= 10 ? "#8b5cf6" : multi >= 5 ? "#facc15" : multi >= 1 ? "#10b981" : "#ef4444"
       ctx.fillRect(i * slotWidth, CANVAS_HEIGHT - 40, slotWidth - 2, 40)
       ctx.fillStyle = "#fff"
-      ctx.font = "12px Arial"
+      ctx.font = "bold 14px Rajdhani, Arial"
       ctx.textAlign = "center"
       ctx.fillText(`${multi}x`, i * slotWidth + slotWidth / 2, CANVAS_HEIGHT - 15)
     })
@@ -126,14 +135,14 @@ const PlinkoGame: React.FC = () => {
 
     // Dibujar bola
     if (ball) {
-      ctx.fillStyle = "#fbbf24"
+      ctx.fillStyle = "#facc15"
       ctx.beginPath()
       ctx.arc(ball.x, ball.y, BALL_RADIUS, 0, Math.PI * 2)
       ctx.fill()
 
       if (ball.finished && ball.resultSlot !== undefined) {
         ctx.fillStyle = "#fff"
-        ctx.font = "18px Arial"
+        ctx.font = "bold 18px Rajdhani, Arial"
         ctx.textAlign = "center"
         ctx.fillText(`${MULTIPLIERS[ball.resultSlot]}x`, ball.x, ball.y - 15)
       }
@@ -149,30 +158,66 @@ const PlinkoGame: React.FC = () => {
       canvas.height = CANVAS_HEIGHT
     }
     requestAnimationFrame(animate)
-  }, [ball])
+  }, [])
+
+  if (!user) {
+    return (
+      <div className="min-h-screen premium-gradient">
+        <Navigation />
+        <div className="container mx-auto px-4 py-20 text-center">
+          <h1 className="text-4xl font-bold text-white mb-8">Login Required</h1>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className="flex flex-col items-center bg-black text-white min-h-screen pt-8 space-y-6">
-      <h1 className="text-4xl font-bold text-yellow-400">🎯 PLINKO</h1>
-      <button
-        onClick={dropBall}
-        className="px-6 py-3 bg-green-600 hover:bg-green-700 rounded text-white font-bold"
-      >
-        DROP BALL
-      </button>
-      <canvas ref={canvasRef} className="rounded border border-gray-700" />
-      {lastResult !== null && (
-        <div className="text-xl text-white mt-4">
-          You won:{" "}
-          <span
-            className={`font-bold ${
-              MULTIPLIERS[lastResult] >= 1 ? "text-green-400" : "text-red-400"
-            }`}
-          >
-            {MULTIPLIERS[lastResult]}x
-          </span>
+    <div className="min-h-screen premium-gradient text-white">
+      <Navigation />
+
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-6">
+          <Link href="/games">
+            <Button variant="ghost" className="text-white hover:text-yellow-400">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Games
+            </Button>
+          </Link>
         </div>
-      )}
+
+        <div className="text-center mb-8">
+          <h1 className="text-6xl font-orbitron font-black text-white mb-4 neon-text">
+            🎯 PLINKO
+          </h1>
+          <p className="text-xl text-gray-300">Drop the ball and chase the multipliers!</p>
+        </div>
+
+        <div className="max-w-4xl mx-auto">
+          <Card className="bg-gray-900 border-2 border-yellow-400">
+            <CardHeader>
+              <CardTitle className="text-center">Board</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center space-y-6">
+              <canvas ref={canvasRef} className="rounded border border-gray-700" />
+              <Button onClick={dropBall} className="bg-green-600 hover:bg-green-700">
+                DROP BALL
+              </Button>
+              {lastResult !== null && (
+                <div className="text-xl mt-2">
+                  You won{' '}
+                  <span
+                    className={`font-bold ${
+                      MULTIPLIERS[lastResult] >= 1 ? 'text-green-400' : 'text-red-400'
+                    }`}
+                  >
+                    {MULTIPLIERS[lastResult]}x
+                  </span>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   )
 }
