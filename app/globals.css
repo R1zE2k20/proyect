@@ -223,6 +223,24 @@ body {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
 }
 
+.dopamine-gradient {
+  background: linear-gradient(60deg, #ff00cc, #333399, #00ff99, #ff6600, #00ccff);
+  background-size: 600% 600%;
+  animation: dopamineShift 8s ease-in-out infinite;
+}
+
+@keyframes dopamineShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 .casino-table {
   background: radial-gradient(ellipse at center, #0d4f3c 0%, #0a3d2e 100%),
     linear-gradient(45deg, #0a3d2e 25%, transparent 25%), linear-gradient(-45deg, #0a3d2e 25%, transparent 25%),

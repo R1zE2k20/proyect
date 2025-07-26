@@ -92,7 +92,7 @@ export default function HomePage() {
   ]
 
   return (
-    <div className="min-h-screen premium-gradient">
+    <div className="min-h-screen dopamine-gradient">
       <Navigation />
 
       {/* Hero Section */}
