@@ -22,7 +22,7 @@
 
 body {
   font-family: var(--font-rajdhani), system-ui, -apple-system, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #ff00cc 0%, #3333ff 100%);
   min-height: 100vh;
 }
 
@@ -220,7 +220,14 @@ body {
 }
 
 .premium-gradient {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+  background: linear-gradient(
+    135deg,
+    #ff00cc 0%,
+    #3333ff 25%,
+    #00ff99 50%,
+    #ffde00 75%,
+    #ff0066 100%
+  );
 }
 
 .casino-table {
